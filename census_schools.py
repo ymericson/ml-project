@@ -40,6 +40,10 @@ def gather_census():
     return df
 
 def impute_negative(df):
+    df['Percent White'] = df['Total White']/df['Total Population']
+    df['Percent Black'] = df['Total Black']/df['Total Population']
+    df['Percent HH with Children'] = df['HH with Children']/df['Total HH']
+    df['Percent Housing Vacant'] = df['Total Vacant Units']/df['Total Housing Units']
     df['Median Age'][df['Median Age'] < 0] = None
     df['Median HH Income'][df['Median HH Income'] < 0] = None
     df['Median Number of Rooms'][df['Median Number of Rooms'] < 0] = None
@@ -82,7 +86,7 @@ def school_data(df):
     schools_gdf = gpd.sjoin(chicago_gdf, schools, how="left", op='intersects')
     schools_geo12 = schools_gdf[['Year', 'geo_12', 'school_id']].groupby(['Year', 'geo_12'])\
         .count().reset_index().rename(columns = {'school_id': 'Number of Public Schools'})
-    df = df.merge(schools_geo12, on=["geo_12", "Year"], how='outer')
+    df = df.merge(schools_geo12, on=["geo_12", "Year"], how='left')
     df['Number of Public Schools'][df['Number of Public Schools'].isna()] = 0
     return df
 
@@ -93,4 +97,4 @@ if __name__ == "__main__":
     print("length:", len(df))    
     df = school_data(df)
     print("length:", len(df))    
-    df.to_csv('data/census_school_test.csv', index=False)
+    df.to_csv('data/census_schools.csv', index=False)
