@@ -6,7 +6,7 @@ import censusdata
 from shapely.geometry import Point
 
 def import_sales_data():
-    query = ("""https://datacatalog.cookcountyil.gov/resource/5pge-nu6u.json?$limit=1000000&$select=pin,sale_price,sale_year,est_land,est_bldg,age,bldg_sf,addr,centroid_x,centroid_y"""
+    query = ("""https://datacatalog.cookcountyil.gov/resource/5pge-nu6u.json?$limit=1000000&$select=pin,sale_price,sale_year,est_land,est_bldg,age,bldg_sf,addr,centroid_x,centroid_y,hd_sf,n_units"""
         ).replace('\n','')
     sales_df = pd.read_json(query)
     # filter any sales that are not arms-length transactions (only fair sales)
