@@ -42,7 +42,7 @@ def import_data():
     acs_df = acs_df.rename(columns={"B02001_001E": "total_pop"})
     census_gdf["geo_12"] = census_gdf["geoid10"].map(lambda x: str(x)[:12])
     acs_df["geo_12"] = acs_df["GEO_ID"].map(lambda x: str(x)[-12:])
-    return acs_df, crimes_gdf, census_gdf
+    return acs_df, crimes_df, census_gdf
 
 def merge_data(acs_df, crimes_gdf, census_gdf):
     # merge data
@@ -93,7 +93,7 @@ def import_cta():
     return census_gdf2
 
     
-def near(point, pts=pts3):
+def near(point, pts):
     # find the nearest point and return the corresponding Place value
     nearest = cta_gdf.geometry == nearest_points(point, pts)[1]
     return max(cta_gdf[nearest].STOP_ID)
@@ -101,7 +101,7 @@ def near(point, pts=pts3):
 
 def nearest_point(df1, df2):
     pts3 = df2.geometry.unary_union
-    df1['STOP_ID'] = df1.apply(lambda row: near(row.geometry), axis=1)
+    df1['STOP_ID'] = df1.apply(lambda row: near(row.geometry, pts3), axis=1)
     merged_with_cta = df1.merge(df1, on="STOP_ID", how="left")
     return merged_with_cta
 
@@ -121,7 +121,7 @@ def visualize_cta(df):
 
 if __name__ == "__main__":
     # crimes
-    acs_df, crimes_gdf, census_gdf = import_data()
+    acs_df, crimes_df, census_gdf = import_data()
     merged_df = merge_data(acs_df, crimes_gdf, census_gdf)
     merged_df2 = modify_data(merged_df)
     visualize_crimes(merged_df2)
@@ -133,5 +133,5 @@ if __name__ == "__main__":
     visualize_cta(cta_df3)
 
     # create csv for both datasets
-    final_gdf.to_csv('data/crimes.csv')
+    merged_df.to_csv('data/crimes.csv')
     final_cta.to_csv('data/cta_dist.csv')
