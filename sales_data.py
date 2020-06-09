@@ -5,6 +5,19 @@ import datetime, calendar
 import censusdata
 from shapely.geometry import Point
 
+"""
+INSTALL:
+sudo apt-get update
+sudo apt install udo
+sudo apt-get install libspatialindex-dev
+pip install Rtree --user
+pip install geopandas
+sudo apt-get install -y python-rtree
+sudo gpt-get install-y python-shapely
+pip install inputs
+"""
+
+
 def import_sales_data():
     query = ("""https://datacatalog.cookcountyil.gov/resource/5pge-nu6u.json?$limit=1000000&$select=pin,sale_price,sale_year,est_land,est_bldg,age,bldg_sf,addr,centroid_x,centroid_y,hd_sf,n_units"""
         ).replace('\n','')
