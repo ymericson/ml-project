@@ -37,18 +37,19 @@ def import_data():
     tables = ['B02001_001E']
     # import files
     crimes_df = pd.read_csv("data/Crimes-2013-2019.csv")
+    crimes_gdf = gpd.GeoDataFrame(crimes_df, geometry=gpd.points_from_xy(crimes_df.Longitude, crimes_df.Latitude))
     census_gdf = gpd.read_file("https://data.cityofchicago.org/resource/bt9m-d2mf.geojson?$limit=9999999")
     acs_df = gather_census(years, tables)
     acs_df = acs_df.rename(columns={"B02001_001E": "total_pop"})
     census_gdf["geo_12"] = census_gdf["geoid10"].map(lambda x: str(x)[:12])
     acs_df["geo_12"] = acs_df["GEO_ID"].map(lambda x: str(x)[-12:])
-    return acs_df, crimes_df, census_gdf
+    return acs_df, crimes_gdf, census_gdf
 
 def merge_data(acs_df, crimes_gdf, census_gdf):
     # merge data
     merged_gdf = acs_df.merge(census_gdf, on="geo_12", how="inner")
     merged_gdf = gpd.GeoDataFrame(merged_gdf)
-    allmerged_gdf = gpd.sjoin(crime_gdf, merged_gdf, how='left')
+    allmerged_gdf = gpd.sjoin(crimes_gdf, merged_gdf, how='left')
     limited_gdf = allmerged_gdf[["total_pop", "ID", "Case Number", "Year_left", "Primary Type", "blockce10", "GEO_ID", "geometry"]]
     return limited_gdf
 
@@ -64,13 +65,12 @@ def modify_data(df):
     joined2.dropna()
     joined2.reset_index()
     joined2['crimes_per_capita'] = joined2['crime_count']/joined2['total_pop']
-    joined2['crimes_per_capita' > 1] # impute with median
+    # joined2['crimes_per_capita' > 1] impute with median
     final_gdf = gpd.GeoDataFrame(joined2)
     return final_gdf
 
 def visualize_crimes(df):
-    final_gdf.plot(figsize=(20, 20), column='crimes_per_capita', cmap=plt.cm.coolwarm, legend=True)
-
+    df.plot(figsize=(20, 20), column='crimes_per_capita', cmap=plt.cm.coolwarm, legend=True)
 
 def clean(df):
     split = df.split(',')
@@ -85,8 +85,7 @@ def import_cta():
     cta_df['location_split'] = cta_df['Location'].apply(lambda x: clean(x))
     cta_df['Longitude'] = cta_df['location_split'].map(lambda x: float(x[1]))
     cta_df['Latitude'] = cta_df['location_split'].map(lambda x: float(x[0]))
-    cta_gdf = gpd.GeoDataFrame(
-    cta_df, geometry=gpd.points_from_xy(cta_df.Longitude, cta_df.Latitude))
+    cta_gdf = gpd.GeoDataFrame(cta_df, geometry=gpd.points_from_xy(cta_df.Longitude, cta_df.Latitude))
     cta_gdf = cta_gdf[['STOP_ID', 'STOP_NAME', 'STATION_NAME', 'Longitude', 'Latitude', 'geometry']]
     census_gdf2 = import_merge_crimes() # this contains census merged with other info (since we want the point)
     census_gdf2 = census_gdf2[['GEO_ID', 'Latitude', 'Longitude', 'geometry']]
@@ -121,7 +120,7 @@ def visualize_cta(df):
 
 if __name__ == "__main__":
     # crimes
-    acs_df, crimes_df, census_gdf = import_data()
+    acs_df, crimes_gdf, census_gdf = import_data()
     merged_df = merge_data(acs_df, crimes_gdf, census_gdf)
     merged_df2 = modify_data(merged_df)
     visualize_crimes(merged_df2)
