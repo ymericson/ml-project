@@ -2,3 +2,5 @@
 Group Project
 
 Linh Dinh, Eric Son, Emily Zhang
+
+## Project Description
