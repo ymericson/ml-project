@@ -30,7 +30,7 @@ def gather_census(years, tables):
         else:
             df = pd.merge(df, table, how="inner", on=["GEO_ID", "Year"])    
     return df
-``
+
 
 def import_data():
     """
@@ -38,8 +38,7 @@ def import_data():
     """
     years = [2013, 2014, 2015, 2016, 2017, 2018]
     tables = ['B02001_001E']
-    #crimes_df = pd.read_csv("data/Crimes-2013-2019.csv")
-    crimes_df = pd.read_json("")
+    crimes_df = pd.read_csv("data/Crimes-2013-2019.csv")
     crimes_gdf = gpd.GeoDataFrame(crimes_df, geometry=gpd.points_from_xy(crimes_df.Longitude, crimes_df.Latitude))
     census_gdf = gpd.read_file("https://data.cityofchicago.org/resource/bt9m-d2mf.geojson?$limit=9999999")
     acs_df = gather_census(years, tables)
@@ -110,7 +109,7 @@ def import_cta():
     return cta_gdf
 
     
-def near(cta_gdf, point, pts):
+def near(point, pts):
     """
     Calculates nearest CTA station and returns the corresponding Stop ID.
     """
@@ -123,7 +122,7 @@ def nearest_point(merged_df2, cta_gdf):
     Calculates nearest CTA station and returns updated dataset with nearest point.
     """
     pts3 = cta_gdf.geometry.unary_union
-    merged_df2['STOP_ID'] = merged_df2.apply(lambda row: near(cta_gdf, row.geometry, pts3), axis=1)
+    merged_df2['STOP_ID'] = merged_df2.apply(lambda row: near(row.geometry, pts3), axis=1)
     merged_with_cta = merged_df2.merge(merged_df2, on="STOP_ID", how="left")
     return merged_with_cta
 
