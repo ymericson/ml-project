@@ -151,18 +151,18 @@ def visualize_cta(df):
     
 
 if __name__ == "__main__":
-    # crimes
+    ## Crime Data
     acs_df, crimes_gdf, census_gdf = import_data()
     merged_df = merge_data(acs_df, crimes_gdf, census_gdf)
     merged_df2 = modify_data(merged_df)
     visualize_crimes(merged_df2)
 
-    # cta
+    ## CTA Data
     cta_gdf = import_cta()
-    cta_df2 = nearest_point(merged_df2, cta_gdf) # need to separate these from merging
+    cta_df2 = nearest_point(merged_df2, cta_gdf)
     cta_df3 = gen_distance(cta_df2)
     visualize_cta(cta_df3)
 
-    # create csv for both datasets
+    ## Create CSV for both datasets
     merged_df.to_csv('data/crimes.csv')
     final_cta.to_csv('data/cta_dist.csv')
