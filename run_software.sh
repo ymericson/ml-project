@@ -15,7 +15,7 @@ python3 full_data.py
 fi
 
 
-echo "Training data with lag ..."
+echo "Preparing training data with lag ..."
 python3 train_data_with_lag.py
-echo "Running model ..."
+echo "Preparing prediction data with lag ..."
 python3 prediction_data_with_lag.py
