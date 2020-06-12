@@ -18,7 +18,7 @@ Run shell script to re-pull the data from APIs and prepare for analysis.
 $ ./run_software.sh
 ```
 
-The bulk of our analysis is performed in the `train-models-lag.ipynb` file.
+The bulk of our analysis is performed in the `train-models-final.ipynb` and `select-models-and-predict-future-values.ipynb` files.
 Data visualizations are prepared in the `data_viz.ipynb` file.
 
 
@@ -33,14 +33,14 @@ Data visualizations are prepared in the `data_viz.ipynb` file.
     - `prediction_data_with_lag.py`: Transforms data for predictions by lagging by three years and other data manipulations
     
 2. Modeling scripts:
-    - `train-models-lag.ipynb`: Creates grid search to run models
+    - `train-models-final.ipynb`: Creates grid search to run models and tune hyper parameters. Outputs of this notebook is saved manually in `all_results.csv`
+    - `select-models-and-predict-future-values.ipynb`: Evaluate different models and choose the final model to predict future values
     
 3. Data Visualization
     - `data_viz.ipynb`: Creates data visualizations
     
 ### Data
 #### Model Outputs
-- `2019_predictions.csv`: Housing price predictions for 2019
 - `2020_2021_predictions.csv`: Housing price predictions for 2020-2021
 #### Model Inputs
 - `Boundaries - Neighborhoods.geojson`: Neighborhood boundaries
