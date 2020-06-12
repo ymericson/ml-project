@@ -158,5 +158,5 @@ if __name__ == "__main__":
     visualize_cta(cta_df3)
 
     ## Create CSV for both datasets
-    merged_df.to_csv('data/crimes.csv')
-    final_cta.to_csv('data/cta_dist.csv')
+    merged_df.to_csv('../crimes.csv')
+    final_cta.to_csv('../cta_dist.csv')
