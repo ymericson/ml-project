@@ -14,6 +14,9 @@ import matplotlib.pyplot as plt
 
 
 def gather_census(years, tables):
+    """
+    Gathers census data
+    """
     df = pd.DataFrame()
     for t in tables:
         table = pd.DataFrame()
