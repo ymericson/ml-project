@@ -90,26 +90,14 @@ def visualize_crimes(df):
     df.plot(figsize=(20, 20), column='crimes_per_capita', cmap=plt.cm.coolwarm, legend=True)
 
 
-def clean(df):
-    """
-    Converts formatting for location attribute
-    """
-    split = df.split(',')
-    lst = []
-    for i in split:
-         lst.append(i.strip('() '))
-    return lst
-
-
 def import_cta():
     """
     Imports CTA 'L' station data
     """
     #cta_df = pd.read_csv("data/CTA-LStops.csv")
     cta_df = pd.read_json("https://data.cityofchicago.org/resource/8pix-ypme.json")
-    cta_df['location_split'] = cta_df['Location'].apply(lambda x: clean(x))
-    cta_df['Longitude'] = cta_df['location_split'].map(lambda x: float(x[1]))
-    cta_df['Latitude'] = cta_df['location_split'].map(lambda x: float(x[0]))
+    cta_df['Longitude'] = cta_df['location'].map(lambda x: float(x['longitude']))
+    cta_df['Latitude'] = cta_df['location'].map(lambda x: float(x['latitude']))
     cta_gdf = gpd.GeoDataFrame(cta_df, geometry=gpd.points_from_xy(cta_df.Longitude, cta_df.Latitude))
     cta_gdf = cta_gdf[['STOP_ID', 'STOP_NAME', 'STATION_NAME', 'Longitude', 'Latitude', 'geometry']]
     return cta_gdf
