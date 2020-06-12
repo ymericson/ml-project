@@ -18,7 +18,7 @@ Run shell script to re-pull the data from APIs and prepare for analysis.
 $ ./run_software.sh
 ```
 
-The bulk of our analysis is performed in the `train-models-lag.ipynb` file.
+The bulk of our analysis is performed in the `train-models-final.ipynb` and `select-models-and-predict-future-values.ipynb` file.
 Data visualizations are prepared in the `data_viz.ipynb` file.
 
 
