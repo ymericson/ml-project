@@ -14,9 +14,6 @@ import matplotlib.pyplot as plt
 
 
 def gather_census(years, tables):
-    """
-    Gathers census data
-    """
     df = pd.DataFrame()
     for t in tables:
         table = pd.DataFrame()
@@ -33,17 +30,15 @@ def gather_census(years, tables):
         else:
             df = pd.merge(df, table, how="inner", on=["GEO_ID", "Year"])    
     return df
-``
+
 
 def import_data():
     """
     Imports data for demographic, crime, and census geographies.
     """
-    years = [2012, 2013, 2014, 2015, 2016, 2017, 2018]
+    years = [2013, 2014, 2015, 2016, 2017, 2018]
     tables = ['B02001_001E']
-    #crimes_df = pd.read_csv("data/Crimes-2013-2019.csv")
-    crimes_12 = pd.read_json("https://data.cityofchicago.org/resource/ijzp-q8t2.json?$limit=9999999")
-    crimes_df = crimes[crimes['year'].between(2012, 2018)]
+    crimes_df = pd.read_csv("data/Crimes-2013-2019.csv")
     crimes_gdf = gpd.GeoDataFrame(crimes_df, geometry=gpd.points_from_xy(crimes_df.Longitude, crimes_df.Latitude))
     census_gdf = gpd.read_file("https://data.cityofchicago.org/resource/bt9m-d2mf.geojson?$limit=9999999")
     acs_df = gather_census(years, tables)
@@ -90,20 +85,31 @@ def visualize_crimes(df):
     df.plot(figsize=(20, 20), column='crimes_per_capita', cmap=plt.cm.coolwarm, legend=True)
 
 
+def clean(df):
+    """
+    Converts formatting for location attribute
+    """
+    split = df.split(',')
+    lst = []
+    for i in split:
+         lst.append(i.strip('() '))
+    return lst
+
+
 def import_cta():
     """
     Imports CTA 'L' station data
     """
-    #cta_df = pd.read_csv("data/CTA-LStops.csv")
-    cta_df = pd.read_json("https://data.cityofchicago.org/resource/8pix-ypme.json")
-    cta_df['Longitude'] = cta_df['location'].map(lambda x: float(x['longitude']))
-    cta_df['Latitude'] = cta_df['location'].map(lambda x: float(x['latitude']))
+    cta_df = pd.read_csv("data/CTA-LStops.csv")
+    cta_df['location_split'] = cta_df['Location'].apply(lambda x: clean(x))
+    cta_df['Longitude'] = cta_df['location_split'].map(lambda x: float(x[1]))
+    cta_df['Latitude'] = cta_df['location_split'].map(lambda x: float(x[0]))
     cta_gdf = gpd.GeoDataFrame(cta_df, geometry=gpd.points_from_xy(cta_df.Longitude, cta_df.Latitude))
     cta_gdf = cta_gdf[['STOP_ID', 'STOP_NAME', 'STATION_NAME', 'Longitude', 'Latitude', 'geometry']]
     return cta_gdf
 
     
-def near(cta_gdf, point, pts):
+def near(point, pts):
     """
     Calculates nearest CTA station and returns the corresponding Stop ID.
     """
@@ -116,7 +122,7 @@ def nearest_point(merged_df2, cta_gdf):
     Calculates nearest CTA station and returns updated dataset with nearest point.
     """
     pts3 = cta_gdf.geometry.unary_union
-    merged_df2['STOP_ID'] = merged_df2.apply(lambda row: near(cta_gdf, row.geometry, pts3), axis=1)
+    merged_df2['STOP_ID'] = merged_df2.apply(lambda row: near(row.geometry, pts3), axis=1)
     merged_with_cta = merged_df2.merge(merged_df2, on="STOP_ID", how="left")
     return merged_with_cta
 
