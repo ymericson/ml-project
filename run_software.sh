@@ -9,11 +9,12 @@ python3 crimes_cta_dist.py
 
 echo "Collecting housing sales data ..."
 python3 sales_gdf.py
+
+echo "Combining datasets ..."
+python3 full_data.py
 fi
 
 
-echo "Merging datasets together ..."
-python3 full_data.py
 echo "Training data with lag ..."
 python3 train_data_with_lag.py
 echo "Running model ..."

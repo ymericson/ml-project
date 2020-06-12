@@ -39,7 +39,8 @@ def import_data():
     years = [2013, 2014, 2015, 2016, 2017, 2018]
     tables = ['B02001_001E']
     #crimes_df = pd.read_csv("data/Crimes-2013-2019.csv")
-    crimes_df = pd.read_json("")
+    crimes = pd.read_json("https://data.cityofchicago.org/resource/ijzp-q8t2.json?$limit=9999999")
+    crimes_df = crimes[crimes['year'].between(2013, 2019)]
     crimes_gdf = gpd.GeoDataFrame(crimes_df, geometry=gpd.points_from_xy(crimes_df.Longitude, crimes_df.Latitude))
     census_gdf = gpd.read_file("https://data.cityofchicago.org/resource/bt9m-d2mf.geojson?$limit=9999999")
     acs_df = gather_census(years, tables)
@@ -101,7 +102,8 @@ def import_cta():
     """
     Imports CTA 'L' station data
     """
-    cta_df = pd.read_csv("data/CTA-LStops.csv")
+    #cta_df = pd.read_csv("data/CTA-LStops.csv")
+    cta_df = pd.read_json("https://data.cityofchicago.org/resource/8pix-ypme.json")
     cta_df['location_split'] = cta_df['Location'].apply(lambda x: clean(x))
     cta_df['Longitude'] = cta_df['location_split'].map(lambda x: float(x[1]))
     cta_df['Latitude'] = cta_df['location_split'].map(lambda x: float(x[0]))
