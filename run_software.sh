@@ -1,21 +1,19 @@
 #!/bin/bash
 
-if [ $1 = "-d" ] ; then
 echo "Collecting census data ... "
-python3 census_schools.py
+python3 data/scripts/census_schools.py
 
 echo "Collecting CTA data ..."
-python3 crimes_cta_dist.py
+python3 data/scripts/crimes_cta_dist.py
 
 echo "Collecting housing sales data ..."
-python3 sales_gdf.py
+python3 data/scripts/sales_gdf.py
 
 echo "Combining datasets ..."
-python3 full_data.py
-fi
-
+python3 data/scripts/full_data.py
 
 echo "Preparing training data with lag ..."
-python3 train_data_with_lag.py
+python3 data/scripts/train_data_with_lag.py
+
 echo "Preparing prediction data with lag ..."
-python3 prediction_data_with_lag.py
+python3 data/scripts/prediction_data_with_lag.py
