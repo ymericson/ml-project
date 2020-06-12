@@ -22,7 +22,8 @@ The bulk of our analysis is performed in the `train-models-lag.ipynb` file.
 Data visualizations are prepared in the `data_viz.ipynb` file.
 
 
-## Structure of the software
+## Structure of the repository
+### Scripts
 1. Data collecting, cleaning, and manipulation:
     - `census_schools.py`: Pulls demographic data from U.S. Census Bureau's American Community Survey (https://www.census.gov/programs-surveys/acs/data.html) and school data from Chicago Data Portal (https://data.cityofchicago.org/)
     - `crimes_cta_dist.py`: Pulls crime and CTA 'L' station data from the Chicago Data Portal and calculates crime count and distance to nearest CTA station for each census block
@@ -36,4 +37,21 @@ Data visualizations are prepared in the `data_viz.ipynb` file.
     
 3. Data Visualization
     - `data_viz.ipynb`: Creates data visualizations
+    
+### Data
+#### Model Outputs
+- `2019_predictions.csv`: Housing price predictions for 2019
+- `2020_2021_predictions.csv`: Housing price predictions for 2020-2021
+#### Model Inputs
+- `Boundaries - Neighborhoods.geojson`: Neighborhood boundaries
+- `census_schools.csv`: Census & school data, output from `census_schools.py`
+- `crimes.csv`: Crimes data, output from `crimes_cta_dist.py`
+- `cta_dist.csv`: CTA distance data, output from `crimes_cta_dist.py`
+- `full_data.csv`: All model inputs compiled, output from `full_data.py`
+- `prediction_data_with_lag.csv`: Transformed prediction data, output from `prediction_data_with_lag.py`
+- `sales_gdf.csv`: Housing sales data, output from `sales_gdf.py`
+- `train_data_with_lag.csv`: Transformed training data, output from `train_data_with_lag.py`
+
+### Graphs
+    - 
 
