@@ -52,6 +52,6 @@ Data visualizations are prepared in the `data_viz.ipynb` file.
 - `sales_gdf.csv`: Housing sales data, output from `sales_gdf.py`
 - `train_data_with_lag.csv`: Transformed training data, output from `train_data_with_lag.py`
 
-### Graphs
-    - 
+### Figures
+Folder containing data visualizations of data, including target and feature variables, as well as predictions.
 
