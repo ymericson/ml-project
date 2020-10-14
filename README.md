@@ -1,7 +1,8 @@
 # Spring 2020 - Machine Learning for Public Policy
-Group Project
 
-Linh Dinh, Eric Son, Emily Zhang
+[Writeup document](https://github.com/ymericson/ml-project/blob/master/ML%20Project%20Final%20Report.pdf)
+
+Group Project: Linh Dinh, Eric Son, Emily Zhang
 
 ## Project Description
 This is a machine learning model that predicts housing prices in Chicago, IL using neighborhood characteristics. Our housing price data uses housing sales in 2013 - 2019 from the Cook County Assessor's Office, aggregated at the Census block group level. Our features include data on demographics, crime, distance to public transit, and more.
